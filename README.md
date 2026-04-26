@@ -90,6 +90,16 @@ The `svelte/no-navigation-without-resolve` lint rule flags raw string hrefs. Use
 
 If `resolve('/foo')` errors, the route doesn't exist yet — create `src/routes/foo/+page.svelte`.
 
+### Dynamic links and Type Safety
+
+When iterating over an array of links (e.g. in a Navbar), `resolve()` requires the input to be one of the known literal route strings. To handle this without using `any`:
+
+1. **Define a helper type**: `type RouteHref = Parameters<typeof resolve>[0];`
+2. **Use it in interfaces**: `type NavLink = { href: RouteHref; ... }`
+3. **Wrap in template**: `<a href={resolve(link.href)}>`
+
+**Note on fragments:** Raw `#` is not a valid route for `resolve()`. Either use a valid route (like `/`) or append the fragment to a valid route (e.g. `/about#section`).
+
 ---
 
 ## 4. Static assets: `asset()` or `import`
